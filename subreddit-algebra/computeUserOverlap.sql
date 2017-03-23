@@ -9,7 +9,7 @@ FROM (
  FROM FLATTEN((
    SELECT UNIQUE(author) author, a.subreddit subreddit, FIRST(authors) authors
    FROM [fh-bigquery:reddit_comments.all_starting_201501] a
-   JOIN [subreddit-vectors:subredditoverlaps.subr_rank_all_starting_201501] b
+   JOIN [texting-adventure:reddit.subreddit_rank] b
    ON a.subreddit=b.subreddit
    WHERE rank_authors>0 and rank_authors<500
    GROUP EACH BY 2  
@@ -20,7 +20,7 @@ JOIN EACH (
  FROM FLATTEN((
    SELECT UNIQUE(author) author, subreddit
    FROM [fh-bigquery:reddit_comments.all_starting_201501]
-   WHERE subreddit IN (SELECT subreddit FROM [subreddit-vectors:subredditoverlaps.subr_rank_all_starting_201501] 
+   WHERE subreddit IN (SELECT subreddit FROM [texting-adventure:reddit.subreddit_rank] 
      WHERE rank_authors>0 and rank_authors<500
    )
    GROUP BY 2
